@@ -1,0 +1,87 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+.signup-page {
+  width: 400px;
+  margin: 4% auto;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+}
+.form input , .form textarea{
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 14px;
+  border-radius: 20px;
+}
+.form select{
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0px;
+  padding: 0px 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 41px;
+  border-right: 1px solid #ddd;
+  border-radius: 20px;
+}
+
+.form select:focus {
+  border: 0;
+  border-right: 1px solid #ddd;
+  box-shadow: none;
+}
+
+.form button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #963694;
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  border-radius: 20px;
+}
+.form button:hover,.form button:active,.form button:focus {
+  background: #842381;
+}
+.form .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+.form .message a {
+  color: #963694;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.form .inputDiv {
+  margin:0;
+  padding: 0;
+  float: left;
+}
+
+.form h3 {
+  padding-bottom: 15px;
+}

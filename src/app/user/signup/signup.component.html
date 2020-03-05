@@ -1,0 +1,23 @@
+<div class="signup-page">
+    <div class="form">
+      <h3>Sign Up</h3>
+      <form class="register-form" #signupForm="ngForm" (ngSubmit)= signUpConfirmation(signupForm.value)>
+        <input type="text" placeholder="First Name" [(ngModel)]="firstName" name="firstName" required autofocus/>
+        <input type="text" placeholder="Last Name" [(ngModel)]="lastName" name="lastName" required/>
+        <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required/>
+        <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required/>
+        <div class="col-3 inputDiv">
+          <select class="custom-select" [(ngModel)]="countryCode" name="countryCode" (change) = onChange($event)>
+            <option *ngFor="let countryCodes of countryCodeList | keyvalue" [ngValue]="countryCodes.value">{{countryCodes.key}}</option>
+          </select>
+        </div>
+        <div class="col-9 inputDiv">
+          <input type="text" placeholder="Mobile No" [(ngModel)]="mobile" name="mobile" required/>
+        </div>
+        <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required/>
+        
+        <button type="submit" >create</button>
+        <p class="message">Already registered? <a (click)="goToSignIn()" >Sign In</a></p>
+      </form>
+    </div>
+</div>

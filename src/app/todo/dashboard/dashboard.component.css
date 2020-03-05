@@ -1,0 +1,67 @@
+.sidebar-side {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.page-header {
+    padding-top: 15px;
+    padding-bottom: 12px;
+}
+
+.btn-purple {
+    background-color: #963694;
+    border: 0;
+    padding: 10px;
+    color: #FFFFFF;
+}
+
+.todos button:hover,.todos button:active,.todos button:focus {
+    background: #842381;
+  }
+
+.view-modal tbody tr:hover{
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-title input[type=text], .view-modal input[type=text] {
+    width:250px;
+    border: transparent;
+}
+
+.modal-title input:focus, .view-modal input:focus {
+    border: transparent;
+    outline: none;
+}
+
+tr.child {
+    border-spacing: 12px;
+}
+
+
+.todo-box {
+    box-shadow: 2px 2px 2px 2px #ccc;
+}
+
+.todo-box .card-header {
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.todo-box .card-footer {
+    padding: 0.3rem 1rem !important;
+}
+.todo-box .card-footer i {
+    padding: 0.2rem 0.5rem;
+}
+
+.todo-box .list-group-item {
+    padding: 0.2rem 1rem !important;
+    font-size: 0.8rem;
+    border: none;
+}
+
+.todo-box input[type="checkbox"] {
+    margin-right: 6px;
+}

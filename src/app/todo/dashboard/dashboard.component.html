@@ -1,0 +1,101 @@
+<app-navbar></app-navbar>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar-side">
+            <app-sidebar [userInfo]="user" [userList]="userList" [friendList]="friendList" [pendingFriendList]="pendingFriendList"></app-sidebar>
+        </div>
+        <div class="col-md-10">
+            <div class="container todos">
+                <div class="page-header">
+                    <h2>TO DOs</h2>
+                </div>
+                <div class="page-content">
+                  <span><h5 *ngIf="todoList.length == 0">Oops! It seems you have no ToDo list. Please start your ToDo list now.</h5> <button class="btn btn-purple" (click)="handleTodoEvent()">Add New Todo</button></span>
+                  <div class="row">
+                  <div class=col-md-3 *ngFor="let todo of todoList">
+                    <div class="card todo-box">
+                      <div class="card-header">
+                        {{todo.title}}
+                      </div>
+                      <ul class="list-group list-group-flush" *ngFor="let t of todo.list">
+                        <li class="list-group-item">
+                          <input type="checkbox" ng-checked="t.isSelected == true" disabled/>
+                          <span>{{t.description}}</span>
+                        </li>
+                        <li class="list-group-item" *ngFor="let c of t.children">
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                              <input type="checkbox" ng-checked="c.isSelected == true" disabled/>
+                              <span>{{c.description}}</span>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                      <div class="card-footer text-right">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Edit Todo" (click)="handleTodoEvent(todo)"></i>
+                        <i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Delete Todo" (click)=removeTodo(todo)></i>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #modalCreate let-close="close">
+      <div class="container-box" tabindex="0" (keydown)= onKeyPress($event)>
+        <div class="modal-header" (keydown)= onKeyPress($event)>
+            <h5 class="modal-title"><input type="text" [(ngModel)]="todo.title" (blur)="updateItem(todo)" placeholder="New Title" /></h5>
+            <button type="button" class="close" (click)="close()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <div class="view-modal">
+            <div class="row">
+              <div class="col-12">
+                <!-- <form #listForm="ngForm"> -->
+                  <table class="table table-sm table-borderless" (keydown)= onKeyPress($event)>
+                    <tbody *ngFor="let t of todo.list">
+                      <tr>
+                        <td><input type="checkbox" ng-checked="t.isSelected == true" [(ngModel)]="t.isSelected" (ngModelChange)="updateItem(todo)"/></td>
+                        <td colspan="2"><input type="text" [(ngModel)]="t.description" (blur)="updateItem(todo)" /> </td>
+                        <td><i class="fa fa-close" aria-hidden="true" (click)="deleteItem(t)"></i></td>
+                      </tr>
+                      <tr class="child" *ngFor="let c of t.children">
+                        <td></td>
+                        <td><input type="checkbox" ng-checked="c.isSelected == true" [(ngModel)]="c.isSelected" (ngModelChange)="updateItem(todo)"/></td>
+                        <td><input type="text" [(ngModel)]="c.description" (blur)="updateItem(todo)"/> </td> 
+                        <td><i class="fa fa-close" aria-hidden="true" (click)="deleteItem(t,c)"></i></td>     
+                      </tr>
+                      <tr class="child" [hidden]="isChildShow" (click)="showChildAddedList()">
+                        <td></td>
+                        <td><i class="fa fa-plus-circle" aria-hidden="true"></i></td>
+                        <td colspan="2">Add New</td>
+                      </tr>
+                      <tr class="child" [hidden]="!isChildShow">
+                        <td></td>
+                        <td><input type="checkbox" [(ngModel)]="childItem.isSelected" name="isSelected"/></td>
+                        <td colspan="2"><input type="text" [(ngModel)]="childItem.description" name="description" (blur)="addItem(t)" (keyup.enter)="addItem(t)"/> </td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr [hidden]="isShow" (click)="showAddedList()">
+                        <td><i class="fa fa-plus-circle" aria-hidden="true"></i></td>
+                        <td colspan="3">Add New</td>
+                      </tr>
+                      <tr [hidden]="!isShow">
+                        <td><input type="checkbox" [(ngModel)]="item.isSelected" name="item.isSelected"/></td>
+                        <td colspan="3"><input type="text" [(ngModel)]="item.description" name="item.description" (blur)="addItem()" (keyup.enter)="addItem(t)"/> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                <!-- </form> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </ng-template>
+</div>

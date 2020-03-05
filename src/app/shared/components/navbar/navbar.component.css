@@ -1,0 +1,11 @@
+.nav .nav-item .nav-link {
+    cursor: pointer;
+}
+
+.bg-purple {
+    background-color: #7C1A79 !important;
+}
+
+.bg-sidebar {
+    background-color: #8e2a8b !important;
+}

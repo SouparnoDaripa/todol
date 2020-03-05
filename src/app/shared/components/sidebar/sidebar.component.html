@@ -1,0 +1,83 @@
+<aside>
+    <div class="sidebar left ">
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="http://via.placeholder.com/160x160" class="rounded-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>{{userInfo.firstName}} {{userInfo.lastName}}</p>
+          <span><i class="fa fa-circle text-success"></i> Online</span>
+        </div>
+      </div>
+      <ul class="list-sidebar bg-sidebar">
+        <li> <a href="#" data-toggle="collapse" data-target="#active-friends" class="active" > <i class="fa fa-users"></i> <span class="nav-label">Active Friends </span> <span><i class="fa fa-circle text-success"></i></span> <span class="fa fa-chevron-left pull-right"></span> </a>
+            <ul class="sub-menu collapse show" id="active-friends" *ngFor="let friend of friendList">
+              <li><a>{{friend.username}}</a></li>
+            </ul>
+        </li>
+        <li> <a href="#" data-toggle="collapse" data-target="#friends" class="collapsed active" > <i class="fa fa-users"></i> <span class="nav-label">All Friends</span> <span class="fa fa-chevron-left pull-right"></span> </a>
+            <ul class="sub-menu collapse" id="friends" *ngFor="let friend of pendingFriendList">
+                <li (click)=handleAcceptRequest(friend)><a>{{friend.username}}</a></li>
+            </ul>
+        </li>
+        
+        <li> <a href="#" data-toggle="collapse" data-target="#other-users" class="collapsed active" ><i class="fa fa-users"></i> <span class="nav-label">Other Users</span><span class="fa fa-chevron-left pull-right"></span></a>
+            <ul  class="sub-menu collapse" id="other-users" *ngFor="let friend of userList">
+              <li (click)=handleSendRequest(friend)><a>{{friend.username}}</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+</aside>
+
+<ng-template #modalSendFriendReq let-close="close">
+  <div class="modal-header">
+      <h5 class="modal-title">Friend Request</h5>
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <div class="view-modal">
+      <div class="row">
+        <div class="col-12">
+            <p>By Clicking Yes, you will send te request to {{friend.username}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      No
+    </button>
+    <button type="button" class="btn btn-outline-primary" (click)="sendFriendRequest(userInfo.userId, friend)">
+      Yes
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalAcceptFriendReq let-close="close">
+  <div class="modal-header">
+      <h5 class="modal-title">Friend Request</h5>
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <div class="view-modal">
+      <div class="row">
+        <div class="col-12">
+            <p>Hey! {{friend.username}} has sent you a friend request. Please accept!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="rejectFriendRequest(userInfo.userId, friend)">
+      Reject
+    </button>
+    <button type="button" class="btn btn-outline-primary" (click)="acceptFriendRequest(userInfo.userId, friend)">
+      Accept
+    </button>
+  </div>
+</ng-template>
