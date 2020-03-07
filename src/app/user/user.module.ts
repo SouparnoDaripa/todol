@@ -8,10 +8,11 @@ import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './login/login.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { AuthFilter } from '../auth/auth-filter.service';
 
-const routes: Routes = [{path: 'signup', component: SignupComponent},
-                        {path: 'forgotPassword', component: ForgotPasswordComponent},
-                        {path: 'resetPassword', component: ResetPasswordComponent}];
+const routes: Routes = [{path: 'signup', component: SignupComponent, canActivate: [AuthFilter]},
+                        {path: 'forgotPassword', component: ForgotPasswordComponent, canActivate: [AuthFilter]},
+                        {path: 'resetPassword', component: ResetPasswordComponent, canActivate: [AuthFilter]}];
 @NgModule({
   declarations: [SignupComponent, LoginComponent, ForgotPasswordComponent, ResetPasswordComponent],
   imports: [
@@ -23,6 +24,7 @@ const routes: Routes = [{path: 'signup', component: SignupComponent},
     FormsModule,
     RouterModule.forChild(routes),
     BrowserAnimationsModule
-  ]
+  ],
+  providers: [AuthFilter]
 })
 export class UserModule { }

@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TodoModule } from './todo/todo.module';
 import { AuthInterceptor } from './auth/auth-interceptor';
+import { SocketService } from './services/socket.service';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     HttpClientModule
   ],
   providers: [AppService,
+              SocketService,
               {
                 provide: HTTP_INTERCEPTORS,
                 useClass: AuthInterceptor,

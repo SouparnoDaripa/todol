@@ -6,11 +6,12 @@ import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/ro
 export class AuthGuard {
   constructor(private router: Router) {}
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    // console.log(state.url);
+    // console.log(state);
     if (Cookie.get('authToken') === undefined || Cookie.get('authToken') === '' || Cookie.get('authToken') === null) {
         this.router.navigate(['/']);
         return false;
     } else {
+        // this.router.navigate(['/dashboard']);
         return true;
     }
   }

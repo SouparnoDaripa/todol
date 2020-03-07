@@ -1,3 +1,4 @@
+import { SocketService } from './../../../services/socket.service';
 import { UserObj } from './../../models/user-obj';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from 'src/app/services/app.service';
@@ -14,14 +15,20 @@ export class SidebarComponent implements OnInit {
 
   constructor(private appService: AppService,
               private toastr: ToastrService,
-              private modal: NgbModal) { }
+              private modal: NgbModal,
+              private socketService: SocketService) { }
 
-  @Input() userInfo: {};
+  @Input() userInfo: {
+              userId: string,
+              firstName: string,
+              lastName: string,
+              username: string
+            };
   @Input() userList: UserObj[];
   @Input() friendList: UserObj[];
   @Input() pendingFriendList: UserObj[];
 
-  // userVList = this.userList.filter( x => !this.friendList.includes(x));
+  userVList: [];
 
   friend: {
     userId: string,
@@ -32,8 +39,8 @@ export class SidebarComponent implements OnInit {
   @ViewChild('modalAcceptFriendReq', { static: true }) modalAcceptFriendRequest: TemplateRef<any>;
 
   handleSendRequest(friend) {
-    console.log(this.userList);
-    console.log(friend);
+    // console.log(this.userList);
+    // console.log(friend);
     this.friend = friend;
     this.modal.open(this.modalSendFriendRequest, { size: 'sm' });
   }
@@ -50,11 +57,11 @@ export class SidebarComponent implements OnInit {
     this.appService.sendFriendRequest(senderId, receiver.userId).subscribe((apiResponse) => {
       if (apiResponse.status === 200) {
         this.toastr.success(`Congrats! You have successfully sent a friend request to ${receiver.username}!`);
-        this.pendingFriendList = [
-          ... this.pendingFriendList,
-          receiver
-        ];
+        this.sendNotification(`You have received a friend request from ${this.userInfo.username}`, receiver.userId);
         this.userList.splice(this.userList.indexOf(receiver));
+        this.modal.dismissAll();
+      } else {
+        this.toastr.error(apiResponse.message);
         this.modal.dismissAll();
       }
     });
@@ -64,11 +71,11 @@ export class SidebarComponent implements OnInit {
     this.appService.acceptFriendRequest(senderId, receiver.userId).subscribe((apiResponse) => {
       if (apiResponse.status === 200) {
         this.toastr.success(`Congrats! You have accepted the friend request of ${receiver.username}!`);
-        this.friendList = [
-          ... this.friendList,
-          receiver
-        ];
+        this.sendNotification(`Your friend request has been accepted by ${this.userInfo.username}`, receiver.userId);
         this.pendingFriendList.splice(this.userList.indexOf(receiver));
+        this.modal.dismissAll();
+      } else {
+        this.toastr.error(apiResponse.message);
         this.modal.dismissAll();
       }
     });
@@ -78,9 +85,24 @@ export class SidebarComponent implements OnInit {
     this.appService.rejectFriendRequest(senderId, receiver.userId).subscribe((apiResponse) => {
       if (apiResponse.status === 200) {
         this.toastr.success(`Ouuch! You have rejected the friend request of ${receiver.username}!`);
+        this.sendNotification(`Your friend request has been rejected by ${this.userInfo.username}`, receiver.userId);
         this.pendingFriendList.splice(this.userList.indexOf(receiver));
+        this.modal.dismissAll();
+      } else {
+        this.toastr.error(apiResponse.message);
         this.modal.dismissAll();
       }
     });
   }
+
+  public sendNotification(msg, id): void {
+    const message = {
+      senderId: this.userInfo.userId,
+      senderName: this.userInfo.firstName + ' ' + this.userInfo.lastName,
+      receiverId: id,
+      message: msg
+    };
+    this.socketService.sendNotification(message);
+  }
+
 }

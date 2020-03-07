@@ -10,12 +10,12 @@
         </div>
       </div>
       <ul class="list-sidebar bg-sidebar">
-        <li> <a href="#" data-toggle="collapse" data-target="#active-friends" class="active" > <i class="fa fa-users"></i> <span class="nav-label">Active Friends </span> <span><i class="fa fa-circle text-success"></i></span> <span class="fa fa-chevron-left pull-right"></span> </a>
+        <li> <a href="#" data-toggle="collapse" data-target="#active-friends" class="active" > <i class="fa fa-users"></i> <span class="nav-label">Friends </span> <span><i class="fa fa-circle text-success"></i></span> <span class="fa fa-chevron-left pull-right"></span> </a>
             <ul class="sub-menu collapse show" id="active-friends" *ngFor="let friend of friendList">
               <li><a>{{friend.username}}</a></li>
             </ul>
         </li>
-        <li> <a href="#" data-toggle="collapse" data-target="#friends" class="collapsed active" > <i class="fa fa-users"></i> <span class="nav-label">All Friends</span> <span class="fa fa-chevron-left pull-right"></span> </a>
+        <li> <a href="#" data-toggle="collapse" data-target="#friends" class="collapsed active" > <i class="fa fa-users"></i> <span class="nav-label">Pending Friends</span> <span class="fa fa-chevron-left pull-right"></span> </a>
             <ul class="sub-menu collapse" id="friends" *ngFor="let friend of pendingFriendList">
                 <li (click)=handleAcceptRequest(friend)><a>{{friend.username}}</a></li>
             </ul>

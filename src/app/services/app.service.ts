@@ -132,6 +132,7 @@ export class AppService {
   }
 
   public getFriendList = (requestUserId): Observable<any> => {
+    console.log('From App Service : ' + requestUserId);
     return this.http.get(`${this.url}/api/v1/relations/${requestUserId}/getAll`);
   }
 

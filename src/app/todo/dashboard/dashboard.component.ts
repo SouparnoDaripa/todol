@@ -1,3 +1,4 @@
+import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { AppService } from 'src/app/services/app.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -5,6 +6,7 @@ import { Item } from 'src/app/shared/models/item';
 import { Todo } from 'src/app/shared/models/todo';
 import { ToastrService } from 'ngx-toastr';
 import { UserObj } from 'src/app/shared/models/user-obj';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-dasboard',
@@ -14,9 +16,12 @@ import { UserObj } from 'src/app/shared/models/user-obj';
 export class DashboardComponent implements OnInit {
 
   constructor(private appService: AppService, private modal: NgbModal,
-              private toastr: ToastrService) { }
+              private toastr: ToastrService,
+              private socketService: SocketService) { }
 
   user = this.appService.getUserInfoFromLocalStorage();
+  authtoken = Cookie.get('authToken');
+  public disconnectedSocket: boolean;
   todoList = [];
   userList: UserObj[] = [];
   friendList: UserObj[] = [];
@@ -51,14 +56,14 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  fetchFriendList = () => {
-    this.appService.getFriendList(this.user.userId).subscribe((apiResponse) => {
+  fetchFriendList = (userId) => {
+    this.appService.getFriendList(userId).subscribe((apiResponse) => {
       this.friendList = apiResponse.data;
     });
   }
 
-  fetchPendingFriendList = () => {
-    this.appService.getPendingFriendList(this.user.userId).subscribe((apiResponse) => {
+  fetchPendingFriendList = (userId) => {
+    this.appService.getPendingFriendList(userId).subscribe((apiResponse) => {
       this.pendingFriendList = apiResponse.data;
     });
   }
@@ -80,8 +85,13 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user = this.appService.getUserInfoFromLocalStorage();
+    this.verifyUserConfirmation();
+    this.getNotification();
     this.fetchUserList();
     this.fetchUserTodoList(this.user.userId);
+    this.fetchFriendList(this.user.userId);
+    this.fetchPendingFriendList(this.user.userId);
   }
 
   showAddedList() {
@@ -139,7 +149,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onKeyPress(event) {
-    let charCode = String.fromCharCode(event.which).toLowerCase();
+    const charCode = String.fromCharCode(event.which).toLowerCase();
     if (event.ctrlKey && charCode === 's') {
       // Do a deept compare to identify the change in the todo.
       // If there is any change then save the entire todo with new version.
@@ -156,12 +166,16 @@ export class DashboardComponent implements OnInit {
 
         if (this.todo1.title !== '' && this.todo.list.length !== 0) {
           this.createNewVersionTodo(this.todo);
+          this.sendNotification(`TODO list has been updated by ${this.user.userId}`,
+                                this.todo.sharedWith.splice(this.todo.sharedWith.indexOf(this.user.userId)));
         } else {
           this.createNewTodo(this.todo);
           this.todoList = [
             ... this.todoList,
             this.todo
           ];
+          this.sendNotification(`New TODO list has been created by ${this.user.userId}`,
+                                this.todo.sharedWith.splice(this.todo.sharedWith.indexOf(this.user.userId)));
         }
         this.todo1 = this.todo1 = JSON.parse(JSON.stringify(this.todo));
         // console.log(this.todo);
@@ -250,5 +264,33 @@ export class DashboardComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  public sendNotification(msg, list): void {
+    if (Array.isArray(list)) {
+      const message = {
+        senderId: this.user.userId,
+        senderName: this.user.firstName + ' ' + this.user.lastName,
+        receiverId: list,
+        message: msg
+      };
+      this.socketService.sendNotification(message);
+    }
+  }
+
+  public verifyUserConfirmation: any = () => {
+    this.socketService.verifyUser().subscribe(() => {
+      this.disconnectedSocket = false;
+      this.socketService.setUser(this.authtoken);
+    });
+  }
+
+  public getNotification: any = () => {
+    this.socketService.onReceivingNotification(this.user.userId).subscribe((data) => {
+      console.log(data);
+      if (this.user.userId === data.receiverId) {
+        this.toastr.info(`Notification received: "${data.message}"`);
+      }
+    });
   }
 }
