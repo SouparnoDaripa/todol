@@ -1,18 +1,19 @@
 <app-navbar></app-navbar>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar-side">
+        <div class="col-md-2 col-sm-3 sidebar-side">
             <app-sidebar [userInfo]="user" [userList]="userList" [friendList]="friendList" [pendingFriendList]="pendingFriendList"></app-sidebar>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10 col-sm-9">
             <div class="container todos">
                 <div class="page-header">
                     <h2>TO DOs</h2>
                 </div>
                 <div class="page-content">
-                  <span><h5 *ngIf="todoList.length == 0">Oops! It seems you have no ToDo list. Please start your ToDo list now.</h5> <button class="btn btn-purple" (click)="handleTodoEvent()">Add New Todo</button></span>
+                  <div *ngIf="todoList.length == 0" class="top-decorum"><h5>Oops! It seems you have no ToDo list. Please start your ToDo list now.</h5> <button class="btn btn-purple" (click)="handleTodoEvent()">Add New Todo</button></div>
+                  <div *ngIf="todoList.length != 0" class="text-right top-decorum"><button class="btn btn-purple" (click)="handleTodoEvent()">Add New Todo</button></div>
                   <div class="row">
-                  <div class=col-md-3 *ngFor="let todo of todoList">
+                  <div class="col-md-3 col-sm-6" *ngFor="let todo of todoList">
                     <div class="card todo-box">
                       <div class="card-header">
                         {{todo.title}}

@@ -45,19 +45,20 @@ export class DashboardComponent implements OnInit {
       this.todo1 = new Todo();
     }
     this.modal.open(this.modalCreate, { size: 'md' });
-    console.log(this.todo);
+    // console.log(this.todo);
   }
 
 
   fetchUserList = () => {
     this.appService.getAllNormalUsers().subscribe((apiResponse) => {
       this.userList = apiResponse.data;
-      console.log(this.userList);
+      // console.log(this.userList);
     });
   }
 
   fetchFriendList = (userId) => {
     this.appService.getFriendList(userId).subscribe((apiResponse) => {
+      // console.log(apiResponse);
       this.friendList = apiResponse.data;
     });
   }
@@ -70,14 +71,14 @@ export class DashboardComponent implements OnInit {
 
   fetchUserTodoList = (userId) => {
     this.appService.getUserTodoList(userId).subscribe((apiResponse) => {
-      // console.log(apiResponse);
+      //  console.log(apiResponse);
       this.todoList = apiResponse.data;
     });
   }
 
   fetchLastVersionTodo = (userId, parentId, version) => {
     this.appService.getUserTodoLastVersion(userId, parentId, version).subscribe((apiResponse) => {
-      console.log(apiResponse);
+      // console.log(apiResponse);
       if (apiResponse.data !== 0) {
         this.todo = apiResponse.data;
       }
@@ -105,7 +106,7 @@ export class DashboardComponent implements OnInit {
   }
 
   updateItem(formList) {
-    // console.log(formList);
+    //  console.log(formList);
   }
 
   addItem(item?, val1?, val2?) {
@@ -115,7 +116,7 @@ export class DashboardComponent implements OnInit {
     }
     if (item) {
       if (this.childItem.description != null || this.childItem.description !== '' && this.childItem.isSelected !== false) {
-        // console.log(this.childItem);
+        //  console.log(this.childItem);
         this.todo.list[this.todo.list.indexOf(item)].children = [
           ...this.todo.list[this.todo.list.indexOf(item)].children,
           this.childItem
@@ -126,7 +127,7 @@ export class DashboardComponent implements OnInit {
       this.isChildShow = false;
     } else {
       if (this.item.description != null || this.item.description !== '' && this.item.isSelected !== false) {
-        // console.log(this.item);
+        //  console.log(this.item);
         this.todo.list = [
           ...this.todo.list,
           this.item
@@ -139,7 +140,7 @@ export class DashboardComponent implements OnInit {
 
   deleteItem(item, child?) {
     if (item) {
-      // console.log(this.todo.list.indexOf(item));
+      //  console.log(this.todo.list.indexOf(item));
     }
     if (child) {
       this.todo.list[this.todo.list.indexOf(item)].children.splice(this.todo.list[this.todo.list.indexOf(item)].children.indexOf(child), 1);
@@ -163,10 +164,15 @@ export class DashboardComponent implements OnInit {
         if (!this.todo.sharedWith.includes(this.user.userId)) {
           this.todo.sharedWith.push(this.user.userId);
         }
-
+        this.friendList.forEach(friend => {
+          if (!this.todo.sharedWith.includes(friend.userId)) {
+            this.todo.sharedWith.push(friend.userId);
+          }
+        });
         if (this.todo1.title !== '' && this.todo.list.length !== 0) {
           this.createNewVersionTodo(this.todo);
-          this.sendNotification(`TODO list has been updated by ${this.user.userId}`,
+          this.fetchUserTodoList(this.user.userId);
+          this.sendNotification(`TODO list has been updated by ${this.user.username}`,
                                 this.todo.sharedWith.splice(this.todo.sharedWith.indexOf(this.user.userId)));
         } else {
           this.createNewTodo(this.todo);
@@ -174,11 +180,11 @@ export class DashboardComponent implements OnInit {
             ... this.todoList,
             this.todo
           ];
-          this.sendNotification(`New TODO list has been created by ${this.user.userId}`,
+          this.sendNotification(`New TODO list has been created by ${this.user.username}`,
                                 this.todo.sharedWith.splice(this.todo.sharedWith.indexOf(this.user.userId)));
         }
         this.todo1 = this.todo1 = JSON.parse(JSON.stringify(this.todo));
-        // console.log(this.todo);
+        //  console.log(this.todo);
       }
       event.preventDefault();
       return false;
@@ -189,7 +195,7 @@ export class DashboardComponent implements OnInit {
   }
 
   press($event) {
-    console.log($event);
+    // console.log($event);
   }
   createNewTodo(todo) {
     this.appService.createNewTodo(todo).subscribe((apiResponse) => {
@@ -211,7 +217,7 @@ export class DashboardComponent implements OnInit {
         this.todo.status = apiResponse.data.status;
         this.todo.parentId = apiResponse.data.parentId;
         this.toastr.success('Todo has been updated successfully');
-        console.log(apiResponse);
+        // console.log(apiResponse);
       }
     });
   }
@@ -226,37 +232,37 @@ export class DashboardComponent implements OnInit {
   }
   deepCompare(currentTodo, prevTodo) {
     if (currentTodo.title !== prevTodo.title) {
-      console.log(1);
+      // console.log(1);
       return true;
     }
     if (currentTodo.version !== prevTodo.version) {
-      console.log(2);
+      // console.log(2);
       return true;
     }
     if (currentTodo.list.length !== prevTodo.list.length) {
-      console.log(3);
+      // console.log(3);
       return true;
     } else {
       for (let i = 0; i < currentTodo.list.length; i++) {
         if (currentTodo.list[i].isSelected !== prevTodo.list[i].isSelected) {
-          console.log(4);
+          // console.log(4);
           return true;
         }
         if (currentTodo.list[i].description !== prevTodo.list[i].description) {
-          console.log(5);
+          // console.log(5);
           return true;
         }
         if (currentTodo.list[i].children.length !== prevTodo.list[i].children.length) {
-          console.log(6);
+          // console.log(6);
           return true;
         } else {
           for (let j = 0; j < currentTodo.list[i].children.length; j++) {
             if (currentTodo.list[i].children[j].isSelected !== prevTodo.list[i].children[j].isSelected) {
-              console.log(7);
+              // console.log(7);
               return true;
             }
             if (currentTodo.list[i].children[j].description !== prevTodo.list[i].children[j].description) {
-              console.log(8);
+              // console.log(8);
               return true;
             }
           }
@@ -287,9 +293,13 @@ export class DashboardComponent implements OnInit {
 
   public getNotification: any = () => {
     this.socketService.onReceivingNotification(this.user.userId).subscribe((data) => {
-      console.log(data);
-      if (this.user.userId === data.receiverId) {
+      // console.log(data);
+      if (Array.isArray(data.receiverId) && data.receiverId.includes(this.user.userId)) {
         this.toastr.info(`Notification received: "${data.message}"`);
+        this.fetchUserTodoList(this.user.userId);
+      } else if (this.user.userId === data.receiverId) {
+        this.toastr.info(`Notification received: "${data.message}"`);
+        this.fetchUserTodoList(this.user.userId);
       }
     });
   }

@@ -1,8 +1,21 @@
 .sidebar{ 
-    width:220px;  background-color:#000;
-    transition: all 0.5s  ease-in-out; 
-    min-height: 580px;
+    background-color:#000;
+    transition: all 0.5s  ease-in-out;
+    min-height: 580px !important; 
 }
+
+@media screen and (max-width: 992px) {
+    .sidebar {
+        min-height: 580px !important;
+    }
+}
+
+@media (max-width: 586) {
+    .sidebar {
+        min-height: 300px !important;
+    }
+}
+
 .bg-sidebar{
     background-color:#222;
 }

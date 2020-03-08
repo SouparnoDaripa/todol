@@ -25,7 +25,6 @@
 }
 
 .modal-title input[type=text], .view-modal input[type=text] {
-    width:250px;
     border: transparent;
 }
 
@@ -64,4 +63,12 @@ tr.child {
 
 .todo-box input[type="checkbox"] {
     margin-right: 6px;
+}
+
+.top-decorum {
+    margin:15px;
+}
+
+.card {
+    margin: 6px
 }
